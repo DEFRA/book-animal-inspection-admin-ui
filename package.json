@@ -1,6 +1,6 @@
 {
-  "name": "cdp-node-frontend-template",
-  "version": "0.15.0",
+  "name": "book-animal-inspection-admin-ui",
+  "version": "0.0.0",
   "description": "CDP Frontend Template",
   "sideEffects": false,
   "main": ".server/index.js",

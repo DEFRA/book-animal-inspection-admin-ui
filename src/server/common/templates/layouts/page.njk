@@ -37,19 +37,30 @@
 {% endblock %}
 
 {% block header %}
-
-  {%if page == "home"%}
-    {% set serviceName = "" %}
-    {%endif%}
-
-    {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    classes: "app-header",
-    containerClasses: "govuk-width-container",
-    serviceName: serviceName,
-    serviceUrl: '/',
-    useTudorCrown: false
-  }) }}
+{{ govukHeader({
+  homepageUrl: "/index",
+  serviceName: "Book a live animal inspection",
+  serviceUrl: "/admin/today-dashboard",
+  navigation: [
+    {
+      href: "today-dashboard.html",
+      text: "Today's inspections",
+      active: true
+    },
+    {
+      href: "/admin/super-admin-controls",
+      text: "Site operations"
+    },
+    {
+      href: "#2",
+      text: "Manage account"
+    },
+    {
+      href: "admin-signed-out.html",
+      text: "Sign out"
+    }
+  ]
+}) }}
 
   {% endblock %}
 

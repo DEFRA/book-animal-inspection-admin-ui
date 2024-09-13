@@ -48,7 +48,7 @@
       active: true
     },
     {
-      href: "/admin/super-admin-controls",
+      href: "/siteOperations",
       text: "Site operations"
     },
     {
@@ -108,5 +108,5 @@
   {% endblock %}
 
   {% block bodyEnd %}
-    <script src="{{ getAssetPath('application.js') }}"></script>
+    <script type="module" src="{{ getAssetPath('application.js') }}"></script>
   {% endblock %}

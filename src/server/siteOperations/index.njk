@@ -1,0 +1,44 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+
+  {% call appPageBody() %}
+       <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Site operations</h1>
+      <p>
+        View and make changes to the way the border control post operates, including inspection lengths and opening times.
+        <h2 class="govuk-heading-m">Inspections</h12>
+
+        <p class="govuk-body">
+           <a href="edit-inspection-lengths-new" class="govuk-link">View inspection lengths</a>
+        </p>
+        <p class="govuk-body">
+           <a href="#" class="govuk-link">View how many inspections happen at once</a>
+        </p>
+        <p class="govuk-body">
+          <a href="edit-inspection-breaks" class="govuk-link">View biosecurity stand-still time</a>
+        </p>
+
+        <h2 class="govuk-heading-m">Opening times and closures</h2>
+
+        <p class="govuk-body">
+          <a href="shed-opening-availability-singular" class="govuk-link">View shed opening times</a>
+        </p>
+
+        <p class="govuk-body">
+         <a href="breaks-view-all" class="govuk-link">View closures</a>
+        </p>
+        <p class="govuk-body">
+         <a href="#" class="govuk-link">View surge opening days</a>
+        </p>
+        <h2 class="govuk-heading-m">Reporting</h2>
+        <p class="govuk-body">
+         <a href="#" class="govuk-link">Export a report</a>
+        </p>
+    </div>
+  </div>
+
+  {% endcall %}
+
+{% endblock %}

@@ -1,107 +1,13 @@
 {% extends 'layouts/page.njk' %}
-
+{% set displayBacklink = true %}
 {% block content %}
 
   {% call appPageBody() %}
-       {{ govukTable({
-  caption: "Shed C: Small animals",
-  captionClasses: "govuk-table__caption--m",
-  firstCellIsHeader: true,
-  head: [
-    {
-      text: "Day"
-    },
-        {
-      text: "Opening times"
-    },
-    {
-      text: "Change"
-    }
-  ],
-  rows: [
-  [
-      {
-        text: "Monday"
-      },
-      {
-        text: _openTimesValue + " to " + _closeTimesValue
-      },
-       { 
-        html: '<a href="shed-c-opening-singular">Change</a>'
-      }
-    ],
-    [
-      {
-        text: "Tuesday"
-      },
-      {
-        text: "8am to 6pm"
-      },
-      { 
-        html: '<a href="shed-c-opening-singular">Change</a>'
-      }
 
-    ],
-    [
-      {
-        text: "Wednesday"
-      },
-      {
-        text: "8am to 6pm"
-      },
-      { 
-        html: '<a href="shed-c-opening-singular">Change</a>'
-      }
-    ],
-    [
-      {
-        text: "Thursday"
-      },
-      {
-        text: "8am to 6pm"
-      },
-      { 
-        html: '<a href="shed-c-opening-singular">Change</a>'
-      }
-    ],
-    [
-      {
-        text: "Friday"
-      },
-      {
-        text: "8am to 6pm"
-      },
-      { 
-        html: '<a href="shed-c-opening-singular">Change</a>'
-      }
-    ],
-      [
-      {
-        text: "Saturday"
-      },
-      {
-        text: "8am to 6pm"
-      },
-            { 
-        html: '<a href="shed-c-opening-singular">Change</a>'
-      }
-    ],
-    [
-      {
-        text: "Sunday"
-      },
-      {
-        text: "8am to 6pm"
-      },
-            { 
-        html: '<a href="shed-c-opening-singular">Change</a>'
-      }
-    ]
-  ]
-}) }}
-
-{{ govukTable({
-            caption: "Shed C: Small animals",
+        {% for tableData in shedOpeningTimingData %}
+       
+           {{ govukTable({
+            caption: tableData.shedName,
             captionClasses: "govuk-table__caption--m",
             firstCellIsHeader: true,
             head: [
@@ -109,8 +15,10 @@
               { text: "Opening times"},
               { text: "Change"}
           ],
-          rows: data
+          rows: tableData.shedOpeningRows
         }) }}
+
+        {% endfor %}
 
   {% endcall %}
 

@@ -1,4 +1,7 @@
-import { shedOpeningTimingController } from '~/src/server/shedOpeningTiming/controller.js'
+import {
+  shedOpeningTimingController,
+  updateShedOpeningTimingController
+} from '~/src/server/shedOpeningTiming/controller.js'
 
 export const shedOpeningTiming = {
   plugin: {
@@ -9,6 +12,11 @@ export const shedOpeningTiming = {
           method: 'GET',
           path: '/shedOpeningTiming',
           ...shedOpeningTimingController
+        },
+        {
+          method: ['GET'],
+          path: '/updateShedOpeningTiming',
+          ...updateShedOpeningTimingController
         }
       ])
     }

@@ -1,0 +1,67 @@
+{% extends 'layouts/page.njk' %}
+{% set displayBacklink = true %}
+{% block content %}
+
+  {% call appPageBody() %}
+
+       <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+<h1 class="govuk-heading-l">Change Shed C Monday opening times</h1>
+
+<form method="post" action="shed-c-opening-singular-check-answers" novalidate>
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set _openDayValue = data['shed-c-monday-day-availability'] or "Open" %}
+{{ govukRadios({
+  id: "shed-c-monday-day-availability",
+  classes: "govuk-radios--inline",
+  name: "shed-c-monday-day-availability",
+  value: data['shed-c-monday-day-availability'],
+  fieldset: {
+    legend: {
+      text: "Monday",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--m"
+    }
+  },
+
+  items: [
+    {
+      text: "Open",
+      value: "_openDayValue",
+      checked: true
+    },
+    {
+      text: "Closed",
+      value: "_openDayValue"
+    }
+  ]
+}) }}
+
+{% set _openTimesValue = data['open-close-times-opening-time'] or "8am" %}
+{% set _closeTimesValue = data['open-close-times-closing-time'] or "6pm" %}
+{{ govukDateInput({
+      id: "open-close-times",
+      namePrefix: "open-close-times",
+      items: [
+        {label: "Open", name: "opening-time", value: _openTimesValue, classes:"govuk-input--width-4"},
+        {label: "Closed", name: "closing-time", value: _closeTimesValue, classes:"govuk-input--width-4"}
+      ]
+    }) }}
+
+<button type="submit" class="govuk-button" data-module="govuk-button">
+  Continue
+</button>
+
+  <p><a href="/shedOpeningTiming">Cancel</a></p>
+
+ </form>
+
+    </div>
+  </div>
+
+  {% endcall %}
+
+{% endblock %}

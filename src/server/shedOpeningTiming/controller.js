@@ -1,6 +1,6 @@
 import { getShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/get-shed-opening-timing.js'
 
-export const shedOpeningTimingController = {
+const shedOpeningTimingController = {
   handler: async (request, h) => {
     const shedOpeningTimingData = await getShedOpeningTiming(1)
 
@@ -19,7 +19,7 @@ export const shedOpeningTimingController = {
         { text: entry.Day },
         { text: `${entry.From} to ${entry.To}` },
         {
-          html: `<a href="inspection-details.html?_id=${entry._id}&from=${entry.From}&To=${entry.To}&Day=${entry.Day}">Change</a>`
+          html: `<a href="updateShedOpeningTiming?_id=${entry._id}&from=${entry.From}&To=${entry.To}&Day=${entry.Day}">Change</a>`
         }
       ])
     })
@@ -32,3 +32,14 @@ export const shedOpeningTimingController = {
     })
   }
 }
+
+const updateShedOpeningTimingController = {
+  handler(request, h) {
+    return h.view('shedOpeningTiming/updateShedOpeningTiming', {
+      pageTitle: 'Shed Opening Timing',
+      heading: 'shedOpeningTiming'
+    })
+  }
+}
+
+export { shedOpeningTimingController, updateShedOpeningTimingController }

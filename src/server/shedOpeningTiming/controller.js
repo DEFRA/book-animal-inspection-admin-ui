@@ -19,7 +19,7 @@ const shedOpeningTimingController = {
         { text: entry.Day },
         { text: `${entry.From} to ${entry.To}` },
         {
-          html: `<a href="updateShedOpeningTiming?_id=${entry._id}&from=${entry.From}&To=${entry.To}&Day=${entry.Day}">Change</a>`
+          html: `<a href="updateShedOpeningTiming?_id=${entry._id}&From=${entry.From}&To=${entry.To}&Day=${entry.Day}&Shedname=${entry.ShedName.split(':')[0].trim()}">Change</a>`
         }
       ])
     })
@@ -35,9 +35,17 @@ const shedOpeningTimingController = {
 
 const updateShedOpeningTimingController = {
   handler(request, h) {
+    const { _id, From, To, Day, Shedname } = request.query
+
     return h.view('shedOpeningTiming/updateShedOpeningTiming', {
       pageTitle: 'Shed Opening Timing',
-      heading: 'shedOpeningTiming'
+      heading: 'shedOpeningTiming',
+      _id: _id,
+      from: From,
+      to: To,
+      day: Day,
+      shedName: Shedname,
+      backUrl: 'shedOpeningTiming'
     })
   }
 }

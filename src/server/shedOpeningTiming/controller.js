@@ -1,4 +1,5 @@
 import { getShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/get-shed-opening-timing.js'
+import { validators } from '~/src/server/common/validations/validations.js'
 
 const shedOpeningTimingController = {
   handler: async (request, h) => {
@@ -35,17 +36,31 @@ const shedOpeningTimingController = {
 
 const updateShedOpeningTimingController = {
   handler(request, h) {
-    const { _id, From, To, Day, Shedname } = request.query
+    let inputParams
+    let error = null
+
+    if (request.method === 'post') {
+      inputParams = request.payload
+
+      error = validators.validateTime(inputParams.From, inputParams.To)
+
+      if (error === null) {
+        return h.redirect('/inspectionDate')
+      }
+    } else {
+      inputParams = request.query
+    }
 
     return h.view('shedOpeningTiming/updateShedOpeningTiming', {
       pageTitle: 'Shed Opening Timing',
       heading: 'shedOpeningTiming',
-      id: _id,
-      from: From,
-      to: To,
-      day: Day,
-      shedName: Shedname,
-      backUrl: 'shedOpeningTiming'
+      id: inputParams.id,
+      from: inputParams.From,
+      to: inputParams.To,
+      day: inputParams.Day,
+      shedName: inputParams.Shedname,
+      backUrl: 'shedOpeningTiming',
+      error
     })
   }
 }

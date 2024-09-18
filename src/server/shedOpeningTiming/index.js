@@ -14,7 +14,7 @@ export const shedOpeningTiming = {
           ...shedOpeningTimingController
         },
         {
-          method: ['GET'],
+          method: ['GET', 'POST'],
           path: '/updateShedOpeningTiming',
           ...updateShedOpeningTimingController
         }

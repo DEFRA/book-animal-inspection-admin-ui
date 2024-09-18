@@ -60,16 +60,30 @@ const validateTime = (from, to) => {
   }
 
   // Validate format of 'from' and 'to' times
-  const fromTime = parseTimeString(from)
-  const toTime = parseTimeString(to)
+  const fromTime = parseTimeString(from)?.split(':')
+  const toTime = parseTimeString(to)?.split(':')
+
+  const fromTimeHours = fromTime ? parseInt(fromTime[0], 10) : null
+  const fromTimeMinutes = fromTime ? parseInt(fromTime[1], 10) : null
+  const toTimeHours = toTime ? parseInt(toTime[0], 10) : null
+  const toTimeMinutes = toTime ? parseInt(toTime[1], 10) : null
 
   if (!fromTime || !toTime) {
     return errorMessages.timeInvalidFormat
   }
 
-  // Ensure 'from' time is earlier than 'to' time
-  if (fromTime >= toTime) {
-    return errorMessages.timeOrderInvalid
+  if (
+    fromTimeHours != null &&
+    toTimeHours != null &&
+    fromTimeMinutes != null &&
+    toTimeMinutes != null
+  ) {
+    if (
+      fromTimeHours > toTimeHours ||
+      (fromTimeHours === toTimeHours && fromTimeMinutes > toTimeMinutes)
+    ) {
+      return errorMessages.timeOrderInvalid
+    }
   }
 
   return null
@@ -81,7 +95,7 @@ const parseTimeString = (timeStr) => {
   const match = timeStr.toLowerCase().match(timeRegex)
   if (!match) return null
 
-  let [hours, minutes, period] = match
+  let [, hours, minutes, period] = match
   minutes = minutes || '00' // default to 00 if no minutes provided
 
   // Convert to 24-hour format for easy comparison

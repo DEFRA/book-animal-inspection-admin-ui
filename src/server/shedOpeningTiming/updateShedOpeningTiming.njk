@@ -8,20 +8,31 @@
       <div class="govuk-grid-column-two-thirds">
        <h1 class="govuk-heading-l">Change {{shedName }} {{ day }} opening times</h1>
      <form action="/updateShedOpeningTiming" method="post">
+       <input type="hidden" name="Day" value="{{ day }}">
+          <input type="hidden" name="Shedname" value="{{ shedName }}">
+      {% if error %}
+          {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: error,
+              href: "#"
+            }
+          ]
+        }) }}
+          {%endif%}
           {% set openTimesValue = from %}
           {% set closeTimesValue = to %}
           {{ govukDateInput({
-                id: "open-close-times",
-                namePrefix: "open-close-times",
                 items: [
-                  {label: "Open", name: "opening-time", value: openTimesValue, classes:"govuk-input--width-5"},
-                  {label: "Closed", name: "closing-time", value: closeTimesValue, classes:"govuk-input--width-5"}
+                  {label: "Open", id: "From", name: "From", value: openTimesValue, classes:"govuk-input--width-5"},
+                  {label: "Closed", id: "To", name: "To", value: closeTimesValue, classes:"govuk-input--width-5"}
                 ]
               }) }}
 
-        <button type="submit" class="govuk-button" data-module="govuk-button">
-          Continue
-        </button>
+          {{ govukButton({
+          text: "Continue"
+        }) }}
 
         <p><a class="govuk-link" href="/shedOpeningTiming">Cancel</a></p>
      </form>

@@ -40,7 +40,7 @@ const updateShedOpeningTimingController = {
     return h.view('shedOpeningTiming/updateShedOpeningTiming', {
       pageTitle: 'Shed Opening Timing',
       heading: 'shedOpeningTiming',
-      _id: _id,
+      id: _id,
       from: From,
       to: To,
       day: Day,

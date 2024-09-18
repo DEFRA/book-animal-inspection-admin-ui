@@ -89,7 +89,7 @@ const validateTime = (from, to) => {
   return null
 }
 
-const timeRegex = /^(1[0-2]|0?[1-9]):?([0-5][0-9])?(am|pm)$/i
+const timeRegex = /^(1[0-2]|0?[1-9]):?([0-5][0-9])?\s?(am|pm)$/i
 
 const parseTimeString = (timeStr) => {
   const match = timeStr.toLowerCase().match(timeRegex)

@@ -1,0 +1,34 @@
+{% extends 'layouts/page.njk' %}
+{% set displayBacklink = true %}
+{% block content %}
+
+  {% call appPageBody() %}
+
+  <form method="post" action="/confirmShedOpeningTiming" novalidate>
+     <input type="hidden" name="Id" value="{{ id }}"> 
+      <input type="hidden" name="From" value="{{ from }}">
+      <input type="hidden" name="To" value="{{ to }}">
+    <div class="govuk-grid-row">
+         <div class="govuk-grid-column-full">
+
+              <h1 class="govuk-heading-l">Check your answers before saving this change</h1>
+              <h2 class="govuk-heading-m">{{shedName}} opening times</h2>
+              <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                 <div class="govuk-summary-list__row">
+                   <dt class="govuk-summary-list__key">
+                      {{day}}
+                   </dt>
+                   <dd class="govuk-summary-list__value">
+                      {{from}} to {{to}}
+                   </dd>
+                 </div>     
+               </dl>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+              Save change
+            </button>
+            <p><a class="govuk-link" href="/shedOpeningTiming">Cancel</a></p>
+          </div>
+    </div>  
+  </form>
+  {% endcall %}
+{% endblock %}

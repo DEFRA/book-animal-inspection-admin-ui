@@ -10,6 +10,8 @@
      <form action="/updateShedOpeningTiming" method="post">
        <input type="hidden" name="Day" value="{{ day }}">
           <input type="hidden" name="Shedname" value="{{ shedName }}">
+           <input type="hidden" name="Id" value="{{ id }}">
+           {{id}}{{day}}{{day}}
       {% if error %}
           {{ govukErrorSummary({
           titleText: "There is a problem",

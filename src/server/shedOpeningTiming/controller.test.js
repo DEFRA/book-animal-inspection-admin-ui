@@ -2,13 +2,19 @@
 
 import {
   shedOpeningTimingController,
-  updateShedOpeningTimingController
+  updateShedOpeningTimingController,
+  confirmShedOpeningTimingController
 } from '~/src/server/shedOpeningTiming/controller.js'
 import { getShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/get-shed-opening-timing.js'
+import { updateShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/update-shed-opening-timing.js'
 import { validators } from '~/src/server/common/validations/validations.js'
 
+// Mocking external dependencies
 jest.mock(
   '~/src/server/shedOpeningTiming/helpers/database/get-shed-opening-timing.js'
+)
+jest.mock(
+  '~/src/server/shedOpeningTiming/helpers/database/update-shed-opening-timing.js'
 )
 jest.mock('~/src/server/common/validations/validations.js')
 
@@ -16,7 +22,6 @@ describe('shedOpeningTimingController', () => {
   let h
 
   beforeEach(() => {
-    // Mock response toolkit (h) for Hapi
     h = {
       view: jest.fn().mockReturnValue('rendered view')
     }
@@ -27,7 +32,6 @@ describe('shedOpeningTimingController', () => {
   })
 
   it('should render the correct view with formatted data', async () => {
-    // Mock data returned by getShedOpeningTiming
     getShedOpeningTiming.mockResolvedValue([
       {
         ShedId: 1,
@@ -51,7 +55,6 @@ describe('shedOpeningTimingController', () => {
 
     const result = await shedOpeningTimingController.handler(request, h)
 
-    // Ensure the correct data is passed to the view
     expect(h.view).toHaveBeenCalledWith('shedOpeningTiming/index', {
       pageTitle: 'Shed Opening Timing',
       heading: 'SehdOpeningTiming',
@@ -63,14 +66,14 @@ describe('shedOpeningTimingController', () => {
               { text: 'Monday' },
               { text: '08:00 to 17:00' },
               {
-                html: '<a href="updateShedOpeningTiming?_id=1&From=08:00&To=17:00&Day=Monday&Shedname=Shed 1">Change</a>'
+                html: '<a href="updateShedOpeningTiming?Id=1&From=08:00&To=17:00&Day=Monday&Shedname=Shed 1">Change</a>'
               }
             ],
             [
               { text: 'Tuesday' },
               { text: '08:00 to 17:00' },
               {
-                html: '<a href="updateShedOpeningTiming?_id=2&From=08:00&To=17:00&Day=Tuesday&Shedname=Shed 1">Change</a>'
+                html: '<a href="updateShedOpeningTiming?Id=2&From=08:00&To=17:00&Day=Tuesday&Shedname=Shed 1">Change</a>'
               }
             ]
           ]
@@ -87,7 +90,6 @@ describe('updateShedOpeningTimingController', () => {
   let h
 
   beforeEach(() => {
-    // Mock response toolkit (h) for Hapi
     h = {
       view: jest.fn().mockReturnValue('rendered view'),
       redirect: jest.fn()
@@ -102,7 +104,7 @@ describe('updateShedOpeningTimingController', () => {
     const request = {
       method: 'get',
       query: {
-        id: '1',
+        Id: '1',
         From: '08:00',
         To: '17:00',
         Day: 'Monday',
@@ -135,17 +137,21 @@ describe('updateShedOpeningTimingController', () => {
       method: 'post',
       payload: {
         From: '08:00',
-        To: '17:00'
+        To: '17:00',
+        Id: '1',
+        Day: 'Monday',
+        Shedname: 'Shed 1'
       }
     }
 
-    // No validation error
     validators.validateTime.mockReturnValue(null)
 
     const result = updateShedOpeningTimingController.handler(request, h)
 
     expect(validators.validateTime).toHaveBeenCalledWith('08:00', '17:00')
-    expect(h.redirect).toHaveBeenCalledWith('/inspectionDate')
+    expect(h.redirect).toHaveBeenCalledWith(
+      '/confirmShedOpeningTiming?Id=1&From=08:00&To=17:00&Day=Monday&Shedname=Shed 1'
+    )
     expect(result).toBeUndefined()
   })
 
@@ -154,11 +160,13 @@ describe('updateShedOpeningTimingController', () => {
       method: 'post',
       payload: {
         From: '17:00',
-        To: '08:00'
+        To: '08:00',
+        Id: '1',
+        Day: 'Monday',
+        Shedname: 'Shed 1'
       }
     }
 
-    // Return a validation error
     validators.validateTime.mockReturnValue('Invalid time range')
 
     const result = updateShedOpeningTimingController.handler(request, h)
@@ -169,16 +177,50 @@ describe('updateShedOpeningTimingController', () => {
       {
         pageTitle: 'Shed Opening Timing',
         heading: 'shedOpeningTiming',
-        id: undefined,
+        id: '1',
         from: '17:00',
         to: '08:00',
-        day: undefined,
-        shedName: undefined,
+        day: 'Monday',
+        shedName: 'Shed 1',
         backUrl: 'shedOpeningTiming',
         error: 'Invalid time range'
       }
     )
 
     expect(result).toBe('rendered view')
+  })
+})
+
+describe('confirmShedOpeningTimingController', () => {
+  let h
+
+  beforeEach(() => {
+    h = {
+      view: jest.fn().mockReturnValue('rendered view'),
+      redirect: jest.fn()
+    }
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('should update shed opening timing and redirect on valid POST request', async () => {
+    const request = {
+      method: 'post',
+      payload: {
+        Id: '1',
+        From: '08:00',
+        To: '17:00'
+      }
+    }
+
+    updateShedOpeningTiming.mockResolvedValue({ response: { ok: true } })
+
+    const result = await confirmShedOpeningTimingController.handler(request, h)
+
+    expect(updateShedOpeningTiming).toHaveBeenCalledWith('1', '08:00', '17:00')
+    expect(h.redirect).toHaveBeenCalledWith('shedOpeningTiming')
+    expect(result).toBeUndefined()
   })
 })

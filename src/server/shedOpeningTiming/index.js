@@ -1,6 +1,7 @@
 import {
   shedOpeningTimingController,
-  updateShedOpeningTimingController
+  updateShedOpeningTimingController,
+  confirmShedOpeningTimingController
 } from '~/src/server/shedOpeningTiming/controller.js'
 
 export const shedOpeningTiming = {
@@ -17,6 +18,11 @@ export const shedOpeningTiming = {
           method: ['GET', 'POST'],
           path: '/updateShedOpeningTiming',
           ...updateShedOpeningTimingController
+        },
+        {
+          method: ['GET', 'POST'],
+          path: '/confirmShedOpeningTiming',
+          ...confirmShedOpeningTimingController
         }
       ])
     }

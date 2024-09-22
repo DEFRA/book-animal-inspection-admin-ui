@@ -1,4 +1,5 @@
 import { getShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/get-shed-opening-timing.js'
+import { updateShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/update-shed-opening-timing.js'
 import { validators } from '~/src/server/common/validations/validations.js'
 
 const shedOpeningTimingController = {
@@ -20,7 +21,7 @@ const shedOpeningTimingController = {
         { text: entry.Day },
         { text: `${entry.From} to ${entry.To}` },
         {
-          html: `<a href="updateShedOpeningTiming?_id=${entry._id}&From=${entry.From}&To=${entry.To}&Day=${entry.Day}&Shedname=${entry.ShedName.split(':')[0].trim()}">Change</a>`
+          html: `<a href="updateShedOpeningTiming?Id=${entry._id}&From=${entry.From}&To=${entry.To}&Day=${entry.Day}&Shedname=${entry.ShedName.split(':')[0].trim()}">Change</a>`
         }
       ])
     })
@@ -45,7 +46,9 @@ const updateShedOpeningTimingController = {
       error = validators.validateTime(inputParams.From, inputParams.To)
 
       if (error === null) {
-        return h.redirect('/inspectionDate')
+        return h.redirect(
+          `/confirmShedOpeningTiming?Id=${inputParams.Id}&From=${inputParams.From}&To=${inputParams.To}&Day=${inputParams.Day}&Shedname=${inputParams.Shedname}`
+        )
       }
     } else {
       inputParams = request.query
@@ -54,7 +57,7 @@ const updateShedOpeningTimingController = {
     return h.view('shedOpeningTiming/updateShedOpeningTiming', {
       pageTitle: 'Shed Opening Timing',
       heading: 'shedOpeningTiming',
-      id: inputParams.id,
+      id: inputParams.Id,
       from: inputParams.From,
       to: inputParams.To,
       day: inputParams.Day,
@@ -65,4 +68,40 @@ const updateShedOpeningTimingController = {
   }
 }
 
-export { shedOpeningTimingController, updateShedOpeningTimingController }
+const confirmShedOpeningTimingController = {
+  handler: async (request, h) => {
+    let inputParams
+
+    if (request.method === 'post') {
+      inputParams = request.payload
+
+      const result = await updateShedOpeningTiming(
+        inputParams.Id,
+        inputParams.From,
+        inputParams.To
+      )
+      if (result?.response.ok) {
+        return h.redirect('shedOpeningTiming')
+      }
+    } else {
+      inputParams = request.query
+    }
+
+    return h.view('shedOpeningTiming/confirmShedOpeningTiming', {
+      pageTitle: 'Confirm Shed Opening Timing',
+      heading: 'shedOpeningTiming',
+      id: inputParams.Id,
+      from: inputParams.From,
+      to: inputParams.To,
+      day: inputParams.Day,
+      shedName: inputParams.Shedname,
+      backUrl: 'shedOpeningTiming'
+    })
+  }
+}
+
+export {
+  shedOpeningTimingController,
+  updateShedOpeningTimingController,
+  confirmShedOpeningTimingController
+}

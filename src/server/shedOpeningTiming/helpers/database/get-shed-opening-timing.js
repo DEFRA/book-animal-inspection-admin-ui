@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
 import { config } from '~/src/config/index.js'
 import { fetcher } from '~/src/server/common/helpers/fetch/fetcher.js'

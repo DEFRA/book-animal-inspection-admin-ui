@@ -20,9 +20,9 @@
             }
           ]
         }) }}
+          {%endif%}
           {% set openTimesValue = from %}
           {% set closeTimesValue = to %}
-          {%endif%}
            {% if error %}
            {{ govukDateInput({
                 items: [

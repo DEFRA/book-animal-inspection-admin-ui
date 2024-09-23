@@ -5,13 +5,12 @@
   {% call appPageBody() %}
 
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-grid-column-full">
        <h1 class="govuk-heading-l">Change {{shedName }} {{ day }} opening times</h1>
      <form action="/updateShedOpeningTiming" method="post">
        <input type="hidden" name="Day" value="{{ day }}">
           <input type="hidden" name="Shedname" value="{{ shedName }}">
            <input type="hidden" name="Id" value="{{ id }}">
-           {{id}}{{day}}{{day}}
       {% if error %}
           {{ govukErrorSummary({
           titleText: "There is a problem",

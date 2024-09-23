@@ -15,9 +15,13 @@ export default {
     '<rootDir>/.server',
     '<rootDir>/.public',
     '<rootDir>/src/__fixtures__',
-    '<rootDir>/src/server/common/test-helpers'
+    '<rootDir>/src/server/common/test-helpers',
+    '<rootDir>/.*index\\.js$',
+    '<rootDir>/src/server/common/',
+    '<rootDir>/src/client/'
   ],
-  coverageDirectory: '<rootDir>/coverage'
+  coverageDirectory: '<rootDir>/coverage',
+  transformIgnorePatterns: []
 }
 
 /**

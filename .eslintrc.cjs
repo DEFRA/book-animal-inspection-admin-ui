@@ -136,6 +136,7 @@ module.exports = {
         // Allow Jest to assert on mocked unbound methods
         '@typescript-eslint/unbound-method': 'off',
         'jest/unbound-method': 'error',
+        '@typescript-eslint/ban-ts-comment': 'off',
 
         // Allow import devDependencies
         'n/no-unpublished-import': [

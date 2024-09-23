@@ -1,0 +1,25 @@
+{% extends 'layouts/page.njk' %}
+{% set displayBacklink = true %}
+{% block content %}
+
+  {% call appPageBody() %}
+
+        {% for tableData in shedOpeningTimingData %}
+       
+           {{ govukTable({
+            caption: tableData.shedName,
+            captionClasses: "govuk-table__caption--m",
+            firstCellIsHeader: true,
+            head: [
+              { text: "Day" },
+              { text: "Opening times"},
+              { text: "Change"}
+          ],
+          rows: tableData.shedOpeningRows
+        }) }}
+
+        {% endfor %}
+
+  {% endcall %}
+
+{% endblock %}

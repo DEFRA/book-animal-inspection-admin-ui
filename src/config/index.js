@@ -62,6 +62,12 @@ export const config = convict({
     format: Boolean,
     default: isTest
   },
+  liveAnimalBookingServiceApiUrl: {
+    doc: 'live animal booking service api',
+    format: String,
+    default: 'http://localhost:3001',
+    env: 'LIVE_ANIMAL_BOOKING_SERVICE_API_URL'
+  },
   log: {
     enabled: {
       doc: 'Is logging enabled',

@@ -1,0 +1,64 @@
+{% extends 'layouts/page.njk' %}
+{% set displayBacklink = true %}
+{% block content %}
+
+  {% call appPageBody() %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+       <h1 class="govuk-heading-l">Change {{shedName }} {{ day }} opening times</h1>
+     <form action="/updateShedOpeningTiming" method="post">
+       <input type="hidden" name="Day" value="{{ day }}">
+          <input type="hidden" name="Shedname" value="{{ shedName }}">
+           <input type="hidden" name="Id" value="{{ id }}">
+           {{id}}{{day}}{{day}}
+      {% if error %}
+          {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: error,
+              href: "#"
+            }
+          ]
+        }) }}
+          {%endif%}
+          {% set openTimesValue = from %}
+          {% set closeTimesValue = to %}
+           {% if error %}
+           {{ govukDateInput({
+                items: [
+                  {label: "Open", id: "From", name: "From", value: openTimesValue, classes:"govuk-input--width-5 govuk-input--error"},
+                  {label: "Closed", id: "To", name: "To", value: closeTimesValue, classes:"govuk-input--width-5 govuk-input--error"}
+                ],
+                errorMessage: {
+                   text: error
+                },
+                formGroup: {
+                  classes: "govuk-form-group--error"
+                }
+              }) }}
+
+            {%else%}
+            {{ govukDateInput({
+                items: [
+                  {label: "Open", id: "From", name: "From", value: openTimesValue, classes:"govuk-input--width-5"},
+                  {label: "Closed", id: "To", name: "To", value: closeTimesValue, classes:"govuk-input--width-5"}
+                ]
+              }) }}
+
+             {%endif%}
+        
+          
+          {{ govukButton({
+          text: "Continue"
+        }) }}
+
+        <p><a class="govuk-link" href="/shedOpeningTiming">Cancel</a></p>
+     </form>
+      </div>
+   </div>
+
+  {% endcall %}
+
+{% endblock %}

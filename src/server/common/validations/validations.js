@@ -108,10 +108,20 @@ const parseTimeString = (timeStr) => {
   return `${hours}:${minutes}`
 }
 
+const validateAnimalSelection = (selectedAnimals) => {
+  // Check if the user selected at least one checkbox
+  if (!selectedAnimals || selectedAnimals.length === 0) {
+    return errorMessages.inspectionLengthAnimalSelectionRequired
+  }
+
+  return null
+}
+
 const validators = {
   validateDate,
   validateAnimalCount,
-  validateTime
+  validateTime,
+  validateAnimalSelection
 }
 
 export { validators }

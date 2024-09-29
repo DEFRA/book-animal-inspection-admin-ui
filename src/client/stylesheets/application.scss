@@ -2,7 +2,6 @@ $govuk-assets-path: '/public/assets/';
 $govuk-global-styles: true;
 
 @import 'pkg:govuk-frontend';
-
 @import 'variables/all';
 @import 'helpers/all';
 @import 'core/all';

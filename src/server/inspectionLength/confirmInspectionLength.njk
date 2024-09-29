@@ -1,0 +1,50 @@
+{% extends 'layouts/page.njk' %}
+{% set displayBacklink = true %}
+{% block content %}
+
+  {% call appPageBody() %}
+
+  <form method="post" action="/confirmInspectionLength">
+      {{ govukSummaryList({
+              rows: [
+                {
+                  key: {
+                    text: "Marshalling"
+                  },
+                  value: {
+                    text: "Sarah Philips"
+                  }
+                },
+                key: {
+                    text: "Unloading"
+                  },
+                  value: {
+                    text: "Sarah Philips"
+                  }
+                },
+                key: {
+                    text: "Inspection"
+                  },
+                  value: {
+                    text: "Sarah Philips"
+                  }
+                },
+                key: {
+                    text: "Loading and clean up"
+                  },
+                  value: {
+                    text: "Sarah Philips"
+                  }
+                },
+                key: {
+                    text: "Total inspection length"
+                  },
+                  value: {
+                    text: "Sarah Philips"
+                  }
+                },
+              ]
+      }) }}
+  </form>
+  {% endcall %}
+{% endblock %}

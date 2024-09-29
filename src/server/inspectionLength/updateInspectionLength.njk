@@ -1,0 +1,87 @@
+{% extends 'layouts/page.njk' %}
+{% set displayBacklink = true %}
+{% block content %}
+
+  {% call appPageBody() %}
+      <h1 class="govuk-heading-l">
+        Change inspection length
+      </h1>
+
+      <h2 class="govuk-heading-m">
+        Dogs
+      </h2>
+
+    <form method="post" action="confirm-inspection-length" novalidate>
+
+      {{ govukInput({
+        label: {
+          text: "Marshalling"
+        },
+        classes: "govuk-input--width-5",
+        id: "minutes",
+        name: "minutes",
+        suffix: {
+          text: "mins"
+        },
+        spellcheck: false,
+        value: "30"
+      }) }}
+
+
+      {{ govukInput({
+        label: {
+          text: "Set up"
+        },
+        classes: "govuk-input--width-5",
+        id: "minutes",
+        name: "minutes",
+        suffix: {
+          text: "mins"
+        },
+        spellcheck: false,
+        value: "30"
+      }) }}
+
+
+      {{ govukInput({
+        label: {
+          text: "Inspection"
+        },
+        classes: "govuk-input--width-5",
+        id: "minutes",
+        name: "minutes",
+        suffix: {
+          text: "mins"
+        },
+        spellcheck: false,
+          value: "30"
+      }) }}
+
+
+      {{ govukInput({
+        label: {
+          text: "Clean up"
+        },
+        classes: "govuk-input--width-5",
+        id: "minutes",
+        name: "minutes",
+        suffix: {
+          text: "mins"
+        },
+        spellcheck: false,
+          value: "30"
+      }) }}
+
+      <h2 class="govuk-label-wrapper">
+          Total inspection time
+       </h2>   
+        <p>240 minutes</p>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+
+    </form>
+{% endcall %}
+
+{% endblock %}

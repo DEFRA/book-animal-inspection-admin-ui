@@ -8,23 +8,25 @@
       </h1>
 
       <h2 class="govuk-heading-m">
-        Dogs
+        {{selectedAnimalTypes}}
       </h2>
 
-    <form method="post" action="confirm-inspection-length" novalidate>
+    <form method="post" action="confirmInspectionLength" >
+       <input type="hidden" id="selectedItems" name="selectedItems" value="{{selectedItems}}">
+       <input type="hidden" id="selectedAnimalTypes" name="selectedAnimalTypes" value="{{selectedAnimalTypes}}">
 
       {{ govukInput({
         label: {
           text: "Marshalling"
         },
         classes: "govuk-input--width-5",
-        id: "minutes",
-        name: "minutes",
+        id: "marshalling",
+        name: "marshalling",
         suffix: {
           text: "mins"
         },
         spellcheck: false,
-        value: "30"
+        value: ""
       }) }}
 
 
@@ -33,13 +35,13 @@
           text: "Set up"
         },
         classes: "govuk-input--width-5",
-        id: "minutes",
-        name: "minutes",
+        id: "setup",
+        name: "setup",
         suffix: {
           text: "mins"
         },
         spellcheck: false,
-        value: "30"
+        value: ""
       }) }}
 
 
@@ -48,13 +50,13 @@
           text: "Inspection"
         },
         classes: "govuk-input--width-5",
-        id: "minutes",
-        name: "minutes",
+        id: "inspection",
+        name: "inspection",
         suffix: {
           text: "mins"
         },
         spellcheck: false,
-          value: "30"
+          value: ""
       }) }}
 
 
@@ -63,19 +65,14 @@
           text: "Clean up"
         },
         classes: "govuk-input--width-5",
-        id: "minutes",
-        name: "minutes",
+        id: "cleanUp",
+        name: "cleanUp",
         suffix: {
           text: "mins"
         },
         spellcheck: false,
-          value: "30"
+          value: ""
       }) }}
-
-      <h2 class="govuk-label-wrapper">
-          Total inspection time
-       </h2>   
-        <p>240 minutes</p>
 
       <button type="submit" class="govuk-button" data-module="govuk-button">
         Save and continue

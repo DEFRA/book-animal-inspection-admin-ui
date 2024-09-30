@@ -1,10 +1,11 @@
 import { getInspectionLength } from '~/src/server/inspectionLength/helpers/database/get-inspection-length.js'
-import { updateShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/update-shed-opening-timing.js'
 import { validators } from '~/src/server/common/validations/validations.js'
 
 const inspectionLengthController = {
   handler: async (request, h) => {
     let error = null
+
+    const inspectionLengthData = await getInspectionLength(1)
 
     if (request.method === 'post') {
       const { selectedItems } = request.payload
@@ -12,12 +13,19 @@ const inspectionLengthController = {
       error = validators.validateAnimalSelection(selectedItems)
 
       if (error === null) {
-        request.yar.set('test', selectedItems)
+        const idArray = selectedItems.split(',')
+
+        // Filter the data based on the input IDs and return AnimalTypes
+        const animalTypes = inspectionLengthData
+          .filter((item) => idArray.includes(item._id))
+          .map((item) => item.AnimalType)
+
+        const selectedAnimalTypes = animalTypes.join(', ')
+        request.yar.set('selectedAnimalTypes', selectedAnimalTypes)
+        request.yar.set('selectedItems', selectedItems)
         return h.redirect('/updateInspectionLength')
       }
     }
-
-    const inspectionLengthData = await getInspectionLength(1)
 
     const inspectionLength = {}
 
@@ -52,57 +60,47 @@ const inspectionLengthController = {
 
 const updateInspectionLengthController = {
   handler(request, h) {
-    let selectedItems
+    // let selectedItems
+    // let selectedAnimalTypes
 
-    if (request.method === 'post') {
-      selectedItems = request.payload
-    } else {
-      selectedItems = request.yar.get('test')
-    }
+    // if (request.method === 'post') {
+    //   selectedItems = request.payload
+    // }
 
     return h.view('inspectionLength/updateInspectionLength', {
       pageTitle: 'Update Inspection Length',
       heading: 'UpdateInspectionLength',
-      marshalling: '',
-      Unloading: '',
-      Inspection: '',
-      loadingAndCleanUp: '',
-      totalInspectionLength: '',
-      backUrl: 'shedOpeningTiming',
-      selectedItems
+      backUrl: 'inspectionLength',
+      selectedItems: request.yar.get('selectedItems'),
+      selectedAnimalTypes: request.yar.get('selectedAnimalTypes')
     })
   }
 }
 
 const confirmInspectionLengthController = {
-  handler: async (request, h) => {
-    let inputParams
-
+  handler: (request, h) => {
     if (request.method === 'post') {
-      inputParams = request.payload
+      const {
+        marshalling,
+        setup,
+        inspection,
+        cleanUp,
+        selectedItems,
+        selectedAnimalTypes
+      } = request.payload
 
-      const result = await updateShedOpeningTiming(
-        inputParams.Id,
-        inputParams.From,
-        inputParams.To
-      )
-      if (result?.response.ok) {
-        return h.redirect('shedOpeningTiming')
-      }
-    } else {
-      inputParams = request.query
+      return h.view('inspectionLength/confirmInspectionLength', {
+        pageTitle: 'Confirm Inspection Length',
+        heading: 'ConfirmInspectionLength',
+        marshalling,
+        setup,
+        inspection,
+        cleanUp,
+        selectedItems,
+        selectedAnimalTypes,
+        backUrl: 'inspectionLength'
+      })
     }
-
-    return h.view('inspectionLength/confirmInspectionLength', {
-      pageTitle: 'Confirm Inspection Length',
-      heading: 'ConfirmInspectionLength',
-      marshalling: '',
-      Unloading: '',
-      Inspection: '',
-      loadingAndCleanUp: '',
-      totalInspectionLength: '',
-      backUrl: 'shedOpeningTiming'
-    })
   }
 }
 

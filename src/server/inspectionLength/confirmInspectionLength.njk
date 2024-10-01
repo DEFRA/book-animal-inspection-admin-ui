@@ -19,7 +19,6 @@
       <input type="hidden" id="setup" name="setup" value="{{setup}}">
       <input type="hidden" id="inspection" name="inspection" value="{{inspection}}">
       <input type="hidden" id="cleanUp" name="cleanUp" value="{{cleanUp}}">
-       <input type="hidden" id="update" name="update" value="true">
         {% if error %}
           {{ govukErrorSummary({
           titleText: "There is a problem",
@@ -38,7 +37,7 @@
                 text: "Marshalling"
               },
               value: {
-                text: marshalling
+                text: marshalling + " mins"
               }
             },
             {
@@ -46,7 +45,7 @@
                 text: "Set up"
               },
               value: {
-                text: setup
+                text: setup + " mins"
               }
             },
             {
@@ -54,7 +53,7 @@
                 text: "Inspection"
               },
               value: {
-                text: inspection
+                text: inspection + " mins"
               }
             },
             {
@@ -62,7 +61,7 @@
                 text: "Clean up"
               },
               value: {
-                text: cleanUp
+                text: cleanUp + " mins"
               }
             },
             {
@@ -70,7 +69,7 @@
                 text: "Total inspection length"
               },
               value: {
-                 text: totalInspectionLength
+                 text: totalInspectionLength + " mins"
               }
             }
           ]

@@ -4,13 +4,13 @@ import { fetcher } from '~/src/server/common/helpers/fetch/fetcher.js'
 
 const logger = createLogger()
 
-async function updateInspectionLength(inspectionLengthObjectc) {
+async function updateInspectionLength(inspectionLengthObject) {
   const endpoint =
     config.get('liveAnimalBookingServiceApiUrl') + `/updateInspectionLengthById`
   const options = {
     method: 'POST',
     body: JSON.stringify({
-      inspectionLengthObjectc
+      inspectionLengthObject
     })
   }
 

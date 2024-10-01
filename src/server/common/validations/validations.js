@@ -117,11 +117,46 @@ const validateAnimalSelection = (selectedAnimals) => {
   return null
 }
 
+const validateInspectionLength = (marshalling, setup, inspection, cleanUp) => {
+  // Map the fields to their respective names for better error messages
+  const fields = {
+    Marshalling: marshalling,
+    Setup: setup,
+    Inspection: inspection,
+    CleanUp: cleanUp
+  }
+
+  // Helper function to validate each field
+  const validateMinutes = (fields) => {
+    const errorMessages = []
+
+    // Iterate over each field and perform the validation
+    for (const [name, value] of Object.entries(fields)) {
+      // Check if the field is empty or undefined
+      if (value === undefined || value === null || value === '') {
+        errorMessages.push(`${name} is required and cannot be empty`)
+      }
+
+      // Check if the value is a valid integer and non-negative
+      if (!Number.isInteger(Number(value)) || Number(value) < 0) {
+        errorMessages.push(`${name} must be a valid non-negative integer value`)
+      }
+    }
+
+    // If there are any error messages, return them joined by a new line
+    return errorMessages.length > 0 ? errorMessages.join('\n') : null
+  }
+
+  // Perform validation on the provided fields
+  return validateMinutes(fields)
+}
+
 const validators = {
   validateDate,
   validateAnimalCount,
   validateTime,
-  validateAnimalSelection
+  validateAnimalSelection,
+  validateInspectionLength
 }
 
 export { validators }

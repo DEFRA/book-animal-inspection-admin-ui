@@ -61,26 +61,8 @@ const inspectionLengthController = {
 
 const updateInspectionLengthController = {
   handler(request, h) {
-    // let selectedItems
-    // let selectedAnimalTypes
-
-    // if (request.method === 'post') {
-    //   selectedItems = request.payload
-    // }
-
-    return h.view('inspectionLength/updateInspectionLength', {
-      pageTitle: 'Update Inspection Length',
-      heading: 'UpdateInspectionLength',
-      backUrl: 'inspectionLength',
-      selectedItems: request.yar.get('selectedItems'),
-      selectedAnimalTypes: request.yar.get('selectedAnimalTypes')
-    })
-  }
-}
-
-const confirmInspectionLengthController = {
-  handler: async (request, h) => {
     let error = null
+
     if (request.method === 'post') {
       const {
         marshalling,
@@ -88,9 +70,54 @@ const confirmInspectionLengthController = {
         inspection,
         cleanUp,
         selectedItems,
-        selectedAnimalTypes,
-        update
+        selectedAnimalTypes
       } = request.payload
+
+      error = validators.validateInspectionLength(
+        marshalling,
+        setup,
+        inspection,
+        cleanUp
+      )
+
+      if (error === null) {
+        request.yar.set('marshalling', marshalling)
+        request.yar.set('setup', setup)
+        request.yar.set('inspection', inspection)
+        request.yar.set('cleanUp', cleanUp)
+        request.yar.set('selectedItems', selectedItems)
+        request.yar.set('selectedAnimalTypes', selectedAnimalTypes)
+        const totalInspectionLength = [
+          marshalling,
+          setup,
+          inspection,
+          cleanUp
+        ].reduce((sum, val) => sum + parseInt(val, 10), 0)
+
+        request.yar.set('totalInspectionLength', totalInspectionLength)
+        return h.redirect('/confirmInspectionLength')
+      }
+    }
+
+    return h.view('inspectionLength/updateInspectionLength', {
+      pageTitle: 'Update Inspection Length',
+      heading: 'UpdateInspectionLength',
+      backUrl: 'inspectionLength',
+      selectedItems: request.yar.get('selectedItems'),
+      selectedAnimalTypes: request.yar.get('selectedAnimalTypes'),
+      error
+    })
+  }
+}
+
+const confirmInspectionLengthController = {
+  handler: async (request, h) => {
+    let error = null
+    let marshalling, setup, inspection, cleanUp, selectedItems
+
+    if (request.method === 'post') {
+      ;({ marshalling, setup, inspection, cleanUp, selectedItems } =
+        request.payload)
 
       const totalInspectionLength = [
         marshalling,
@@ -99,40 +126,37 @@ const confirmInspectionLengthController = {
         cleanUp
       ].reduce((sum, val) => sum + parseInt(val, 10), 0)
 
-      if (update === 'true') {
-        const ids = selectedItems.split(',')
+      const ids = selectedItems.split(',')
 
-        const updateObj = ids.map((id) => ({
-          _id: id,
-          Marshalling: marshalling,
-          Unloading: setup,
-          Inspection: inspection,
-          LoadingAndCleanUp: cleanUp,
-          TotalInspectionLength: totalInspectionLength
-        }))
+      const updateObj = ids.map((id) => ({
+        _id: id,
+        Marshalling: marshalling,
+        Unloading: setup,
+        Inspection: inspection,
+        LoadingAndCleanUp: cleanUp,
+        TotalInspectionLength: totalInspectionLength
+      }))
 
-        const result = await updateInspectionLength(updateObj)
-        if (result?.response.ok) {
-          return h.redirect('inspectionLength')
-        } else {
-          error = 'Failed to update the records.'
-        }
+      const result = await updateInspectionLength(updateObj)
+      if (result?.response.ok) {
+        return h.redirect('inspectionLength')
+      } else {
+        error = 'Failed to update the records.'
       }
-
-      return h.view('inspectionLength/confirmInspectionLength', {
-        pageTitle: 'Confirm Inspection Length',
-        heading: 'ConfirmInspectionLength',
-        marshalling,
-        setup,
-        inspection,
-        cleanUp,
-        selectedItems,
-        selectedAnimalTypes,
-        totalInspectionLength,
-        backUrl: 'inspectionLength',
-        error
-      })
     }
+    return h.view('inspectionLength/confirmInspectionLength', {
+      pageTitle: 'Confirm Inspection Length',
+      heading: 'ConfirmInspectionLength',
+      marshalling: request.yar.get('marshalling'),
+      setup: request.yar.get('setup'),
+      inspection: request.yar.get('inspection'),
+      cleanUp: request.yar.get('cleanUp'),
+      selectedItems: request.yar.get('selectedItems'),
+      selectedAnimalTypes: request.yar.get('selectedAnimalTypes'),
+      totalInspectionLength: request.yar.get('totalInspectionLength'),
+      backUrl: 'inspectionLength',
+      error
+    })
   }
 }
 

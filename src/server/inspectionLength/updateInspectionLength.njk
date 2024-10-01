@@ -11,10 +11,24 @@
         {{selectedAnimalTypes}}
       </h2>
 
-    <form method="post" action="confirmInspectionLength" >
+    <form method="post" action="updateInspectionLength">
        <input type="hidden" id="selectedItems" name="selectedItems" value="{{selectedItems}}">
        <input type="hidden" id="selectedAnimalTypes" name="selectedAnimalTypes" value="{{selectedAnimalTypes}}">
-
+       {# <input type="hidden" id="marshalling" name="marshalling" value="{{marshalling}}">
+       <input type="hidden" id="setup" name="setup" value="{{setup}}">
+       <input type="hidden" id="inspection" name="inspection" value="{{inspection}}">
+       <input type="hidden" id="cleanUp" name="cleanUp" value="{{cleanUp}}"> #}
+      {% if error %}
+          {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: error,
+              href: "#"
+            }
+          ]
+        }) }}
+        {%endif%} 
       {{ govukInput({
         label: {
           text: "Marshalling"

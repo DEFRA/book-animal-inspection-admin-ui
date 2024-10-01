@@ -118,37 +118,27 @@ const validateAnimalSelection = (selectedAnimals) => {
 }
 
 const validateInspectionLength = (marshalling, setup, inspection, cleanUp) => {
-  // Map the fields to their respective names for better error messages
-  const fields = {
-    Marshalling: marshalling,
-    Setup: setup,
-    Inspection: inspection,
-    CleanUp: cleanUp
-  }
+  // Helper function to check if a value is a positive integer
+  const isValidInteger = (value) => Number.isInteger(value) && value > 0
 
-  // Helper function to validate each field
-  const validateMinutes = (fields) => {
-    const errorMessages = []
+  // Convert input strings to integers
+  const fields = [
+    parseInt(marshalling, 10),
+    parseInt(setup, 10),
+    parseInt(inspection, 10),
+    parseInt(cleanUp, 10)
+  ]
 
-    // Iterate over each field and perform the validation
-    for (const [name, value] of Object.entries(fields)) {
-      // Check if the field is empty or undefined
-      if (value === undefined || value === null || value === '') {
-        errorMessages.push(`${name} is required and cannot be empty`)
-      }
-
-      // Check if the value is a valid integer and non-negative
-      if (!Number.isInteger(Number(value)) || Number(value) < 0) {
-        errorMessages.push(`${name} must be a valid non-negative integer value`)
-      }
+  // Check all fields using a single iteration
+  for (const value of fields) {
+    if (!isValidInteger(value)) {
+      // Return a single generic error message if any field is invalid
+      return errorMessages.inspectionLengthTimeRequired
     }
-
-    // If there are any error messages, return them joined by a new line
-    return errorMessages.length > 0 ? errorMessages.join('\n') : null
   }
 
-  // Perform validation on the provided fields
-  return validateMinutes(fields)
+  // If all fields are valid, return null (indicating no error)
+  return null
 }
 
 const validators = {

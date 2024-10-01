@@ -40,7 +40,10 @@
           text: "mins"
         },
         spellcheck: false,
-        value: ""
+        value: "",
+          attributes: {
+        maxlength: 3 
+    }
       }) }}
 
 
@@ -55,7 +58,10 @@
           text: "mins"
         },
         spellcheck: false,
-        value: ""
+        value: "",
+          attributes: {
+        maxlength: 3 
+    }
       }) }}
 
 
@@ -70,7 +76,10 @@
           text: "mins"
         },
         spellcheck: false,
-          value: ""
+          value: "",
+          attributes: {
+        maxlength: 3 
+    }
       }) }}
 
 
@@ -85,12 +94,16 @@
           text: "mins"
         },
         spellcheck: false,
-          value: ""
+          value: "",
+          attributes: {
+        maxlength: 3 
+    }
       }) }}
 
       <button type="submit" class="govuk-button" data-module="govuk-button">
         Save and continue
       </button>
+       <p><a class="govuk-link" href="inspectionLength">Cancel</a></p>
 
     </form>
 {% endcall %}

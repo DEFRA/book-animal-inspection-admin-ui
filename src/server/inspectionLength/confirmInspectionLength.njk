@@ -15,6 +15,22 @@
       </div>
       <h2 class="govuk-heading-m">Inspection length: {{selectedAnimalTypes}}</h2>
       <input type="hidden" id="selectedItems" name="selectedItems" value="{{selectedItems}}">
+      <input type="hidden" id="marshalling" name="marshalling" value="{{marshalling}}">
+      <input type="hidden" id="setup" name="setup" value="{{setup}}">
+      <input type="hidden" id="inspection" name="inspection" value="{{inspection}}">
+      <input type="hidden" id="cleanUp" name="cleanUp" value="{{cleanUp}}">
+       <input type="hidden" id="update" name="update" value="true">
+        {% if error %}
+          {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: error,
+              href: "#"
+            }
+          ]
+        }) }}
+          {%endif%}
        {{ govukSummaryList({
           rows: [
             {
@@ -54,13 +70,13 @@
                 text: "Total inspection length"
               },
               value: {
-                 text: ""
+                 text: totalInspectionLength
               }
             }
           ]
         }) }}
 
-        <button type="submit" class="govuk-button" data-module="govuk-button">
+        <button type="submit" class="govuk-button" id="btnUpdate" value="update"  data-module="govuk-button">
             Save changes
         </button>
 

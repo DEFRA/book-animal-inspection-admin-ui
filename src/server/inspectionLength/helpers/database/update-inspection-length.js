@@ -4,16 +4,13 @@ import { fetcher } from '~/src/server/common/helpers/fetch/fetcher.js'
 
 const logger = createLogger()
 
-async function updateShedOpeningTiming(id, from, to) {
+async function updateInspectionLength(inspectionLengthObjectc) {
   const endpoint =
-    config.get('liveAnimalBookingServiceApiUrl') +
-    `/updateShedOpeningTimingById`
+    config.get('liveAnimalBookingServiceApiUrl') + `/updateInspectionLengthById`
   const options = {
     method: 'POST',
     body: JSON.stringify({
-      id,
-      from,
-      to
+      inspectionLengthObjectc
     })
   }
 
@@ -21,8 +18,8 @@ async function updateShedOpeningTiming(id, from, to) {
     const result = await fetcher(endpoint, options)
     return result
   } catch (error) {
-    logger.error('Error updating Shed Opening Time', error)
+    logger.error('Error updating inspection length', error)
   }
 }
 
-export { updateShedOpeningTiming }
+export { updateInspectionLength }

@@ -1,4 +1,5 @@
 import { getInspectionLength } from '~/src/server/inspectionLength/helpers/database/get-inspection-length.js'
+import { updateInspectionLength } from '~/src/server/inspectionLength/helpers/database/update-inspection-length.js'
 import { validators } from '~/src/server/common/validations/validations.js'
 
 const inspectionLengthController = {
@@ -78,7 +79,8 @@ const updateInspectionLengthController = {
 }
 
 const confirmInspectionLengthController = {
-  handler: (request, h) => {
+  handler: async (request, h) => {
+    let error = null
     if (request.method === 'post') {
       const {
         marshalling,
@@ -86,8 +88,36 @@ const confirmInspectionLengthController = {
         inspection,
         cleanUp,
         selectedItems,
-        selectedAnimalTypes
+        selectedAnimalTypes,
+        update
       } = request.payload
+
+      const totalInspectionLength = [
+        marshalling,
+        setup,
+        inspection,
+        cleanUp
+      ].reduce((sum, val) => sum + parseInt(val, 10), 0)
+
+      if (update === 'true') {
+        const ids = selectedItems.split(',')
+
+        const updateObj = ids.map((id) => ({
+          _id: id,
+          Marshalling: marshalling,
+          Unloading: setup,
+          Inspection: inspection,
+          LoadingAndCleanUp: cleanUp,
+          TotalInspectionLength: totalInspectionLength
+        }))
+
+        const result = await updateInspectionLength(updateObj)
+        if (result?.response.ok) {
+          return h.redirect('inspectionLength')
+        } else {
+          error = 'Failed to update the records.'
+        }
+      }
 
       return h.view('inspectionLength/confirmInspectionLength', {
         pageTitle: 'Confirm Inspection Length',
@@ -98,7 +128,9 @@ const confirmInspectionLengthController = {
         cleanUp,
         selectedItems,
         selectedAnimalTypes,
-        backUrl: 'inspectionLength'
+        totalInspectionLength,
+        backUrl: 'inspectionLength',
+        error
       })
     }
   }

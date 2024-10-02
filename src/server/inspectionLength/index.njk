@@ -1,0 +1,103 @@
+{% extends 'layouts/page.njk' %}
+{% set displayBacklink = true %}
+{% block content %}
+
+   <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+     <form action="/inspectionLength" method="post">
+          {% if error %}
+          {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: error,
+              href: "#"
+            }
+          ]
+        }) }}
+        {%endif%}
+          <input type="hidden" id="selectedItems" name="selectedItems" value="{{selectedItems}}">
+          <input type="hidden" id="selectedAnimalType" name="selectedAnimalType" value="{{selectedAnimalTypes}}">
+          <h1 class="govuk-heading-xl">
+           View inspection lengths
+        </h1>
+        <div class="govuk-warning-text">
+            Select an animal to change its inspection length.
+          </strong>
+        </div>
+      {% for tableData in inspectionLengthData %}
+        <h2 class="govuk-heading-m">
+         {{tableData.shedName}}
+         
+        </h2>
+        <table class="govuk-table" data-module="moj-multi-select" data-multi-select-checkbox="#select-all">
+           <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header" scope="col" id="select-all"></th>
+              <th class="govuk-table__header" scope="col">Animal type</th>
+              <th class="govuk-table__header" scope="col">Marshalling</th>
+              <th class="govuk-table__header" scope="col">Unloading</th>
+              <th class="govuk-table__header" scope="col">Inspection</th>
+              <th class="govuk-table__header" scope="col">Loading and clean up</th>
+              <th class="govuk-table__header" scope="col">Total inspection length</th>
+            </tr>
+           </thead>
+                <tbody class="govuk-table__body">
+                  {% for row in tableData.inspectionLengthRows %}
+                 
+                  <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                          <div class="govuk-checkboxes__item govuk-checkboxes--small moj-multi-select__checkbox">
+                            <input type="checkbox" class="govuk-checkboxes__input" id="{{ row[0].id }}" value="{{ row[0].id }}"/>
+                            <label class="govuk-label govuk-checkboxes__label" for="{{ row[0].id }}">
+                              <span class="govuk-visually-hidden">Select Animal Type</span>
+                            </label>
+                          </div>
+                        </td>
+                    <td class="govuk-table__cell">{{ row[1].AnimalType }}</td>
+                    <td class="govuk-table__cell">{{ row[2].Marshalling }} mins</td>
+                    <td class="govuk-table__cell">{{ row[3].Unloading }} mins</td>
+                    <td class="govuk-table__cell">{{ row[4].Inspection }} mins</td>
+                    <td class="govuk-table__cell">{{ row[5].LoadingAndCleanUp }} mins</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ row[6].TotalInspectionLength }} mins</td>
+                </tr>
+                  {% endfor %}
+                  
+                </tbody>
+         </table>
+          <button type="submit" class="govuk-button">
+            Change inspection length
+          </button>
+      {% endfor %}
+   </form>
+   </div>
+  </div>
+
+{% endblock %}
+
+  {% block bodyEnd %}
+    <script type="module" src="{{ getAssetPath('application.js') }}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get all checkboxes and the hidden field
+        const checkboxes = document.querySelectorAll('.govuk-checkboxes__input');
+        const hiddenField = document.getElementById('selectedItems');
+
+        // Update hidden field whenever a checkbox is checked or unchecked
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateHiddenField);
+        });
+
+        function updateHiddenField() {
+            // Collect all checked checkbox values
+            const selectedValues = Array.from(checkboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value)
+                .filter(value => value !== 'on'); 
+
+            // Update the hidden input value with the comma-separated values
+            hiddenField.value = selectedValues.join(',');
+        }
+    });
+</script>
+{% endblock %}

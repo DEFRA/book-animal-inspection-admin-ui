@@ -108,10 +108,45 @@ const parseTimeString = (timeStr) => {
   return `${hours}:${minutes}`
 }
 
+const validateAnimalSelection = (selectedAnimals) => {
+  // Check if the user selected at least one checkbox
+  if (!selectedAnimals || selectedAnimals.length === 0) {
+    return errorMessages.inspectionLengthAnimalSelectionRequired
+  }
+
+  return null
+}
+
+const validateInspectionLength = (marshalling, setup, inspection, cleanUp) => {
+  // Helper function to check if a value is a positive integer
+  const isValidInteger = (value) => Number.isInteger(value) && value > 0
+
+  // Convert input strings to integers
+  const fields = [
+    parseInt(marshalling, 10),
+    parseInt(setup, 10),
+    parseInt(inspection, 10),
+    parseInt(cleanUp, 10)
+  ]
+
+  // Check all fields using a single iteration
+  for (const value of fields) {
+    if (!isValidInteger(value)) {
+      // Return a single generic error message if any field is invalid
+      return errorMessages.inspectionLengthTimeRequired
+    }
+  }
+
+  // If all fields are valid, return null (indicating no error)
+  return null
+}
+
 const validators = {
   validateDate,
   validateAnimalCount,
-  validateTime
+  validateTime,
+  validateAnimalSelection,
+  validateInspectionLength
 }
 
 export { validators }

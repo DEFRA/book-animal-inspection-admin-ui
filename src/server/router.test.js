@@ -7,6 +7,7 @@ import { serveStaticFiles } from '~/src/server/common/helpers/serve-static-files
 import { about } from '~/src/server/about/index.js'
 import { siteOperations } from '~/src/server/siteOperations/index.js'
 import { shedOpeningTiming } from '~/src/server/shedOpeningTiming/index.js'
+import { inspectionLength } from '~/src/server/inspectionLength/index.js'
 
 // Mocking the dependencies
 jest.mock('@hapi/inert')
@@ -16,6 +17,7 @@ jest.mock('~/src/server/common/helpers/serve-static-files.js')
 jest.mock('~/src/server/about/index.js')
 jest.mock('~/src/server/siteOperations/index.js')
 jest.mock('~/src/server/shedOpeningTiming/index.js')
+jest.mock('~/src/server/inspectionLength/index.js')
 
 describe('router plugin', () => {
   let server
@@ -42,7 +44,8 @@ describe('router plugin', () => {
       home,
       about,
       siteOperations,
-      shedOpeningTiming
+      shedOpeningTiming,
+      inspectionLength
     ])
     expect(server.register).toHaveBeenCalledWith([serveStaticFiles])
   })

@@ -1,0 +1,86 @@
+{% extends 'layouts/page.njk' %}
+{% set displayBacklink = true %}
+{% block content %}
+
+  {% call appPageBody() %}
+
+  <form method="post" action="/confirmInspectionLength">
+      <h1 class="govuk-heading-l">Check your answers before saving this change</h1>
+      <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+          <span class="govuk-visually-hidden">Warning</span>
+          This change will only affect inspection length for future bookings.
+        </strong>
+      </div>
+      <h2 class="govuk-heading-m">Inspection length: {{selectedAnimalTypes}}</h2>
+      <input type="hidden" id="selectedItems" name="selectedItems" value="{{selectedItems}}">
+      <input type="hidden" id="marshalling" name="marshalling" value="{{marshalling}}">
+      <input type="hidden" id="setup" name="setup" value="{{setup}}">
+      <input type="hidden" id="inspection" name="inspection" value="{{inspection}}">
+      <input type="hidden" id="cleanUp" name="cleanUp" value="{{cleanUp}}">
+        {% if error %}
+          {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: error,
+              href: "#"
+            }
+          ]
+        }) }}
+          {%endif%}
+       {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "Marshalling"
+              },
+              value: {
+                text: marshalling + " mins"
+              }
+            },
+            {
+              key: {
+                text: "Set up"
+              },
+              value: {
+                text: setup + " mins"
+              }
+            },
+            {
+              key: {
+                text: "Inspection"
+              },
+              value: {
+                text: inspection + " mins"
+              }
+            },
+            {
+              key: {
+                text: "Clean up"
+              },
+              value: {
+                text: cleanUp + " mins"
+              }
+            },
+            {
+              key: {
+                text: "Total inspection length"
+              },
+              value: {
+                 text: totalInspectionLength + " mins"
+              }
+            }
+          ]
+        }) }}
+
+        <button type="submit" class="govuk-button" id="btnUpdate" value="update"  data-module="govuk-button">
+            Save changes
+        </button>
+
+         <p><a class="govuk-link" href="inspectionLength">Cancel</a></p>
+
+  </form>
+  {% endcall %}
+{% endblock %}

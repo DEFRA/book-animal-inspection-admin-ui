@@ -1,0 +1,113 @@
+{% extends 'layouts/page.njk' %}
+{% set displayBacklink = true %}
+{% block content %}
+
+  {% call appPageBody() %}
+      <h1 class="govuk-heading-l">
+        Change inspection length
+      </h1>
+
+      <h2 class="govuk-heading-m">
+        {{selectedAnimalTypes}}
+      </h2>
+
+    <form method="post" action="updateInspectionLength">
+       <input type="hidden" id="selectedItems" name="selectedItems" value="{{selectedItems}}">
+       <input type="hidden" id="selectedAnimalTypes" name="selectedAnimalTypes" value="{{selectedAnimalTypes}}">
+       {# <input type="hidden" id="marshalling" name="marshalling" value="{{marshalling}}">
+       <input type="hidden" id="setup" name="setup" value="{{setup}}">
+       <input type="hidden" id="inspection" name="inspection" value="{{inspection}}">
+       <input type="hidden" id="cleanUp" name="cleanUp" value="{{cleanUp}}"> #}
+      {% if error %}
+          {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: error,
+              href: "#"
+            }
+          ]
+        }) }}
+        {%endif%} 
+    <div class="{{formGroupClass}}">
+      {{ govukInput({
+        label: {
+          text: "Marshalling"
+        },
+        classes: inputClass,
+        id: "marshalling",
+        name: "marshalling",
+        suffix: {
+          text: "mins"
+        },
+        spellcheck: false,
+        value: "",
+          attributes: {
+        maxlength: 3 
+    }
+      }) }}
+
+      {{ govukInput({
+        label: {
+          text: "Set up"
+        },
+        classes: inputClass,
+        id: "setup",
+        name: "setup",
+        suffix: {
+          text: "mins"
+        },
+        spellcheck: false,
+        value: "",
+          attributes: {
+        maxlength: 3 
+    }
+      }) }}
+
+
+      {{ govukInput({
+        label: {
+          text: "Inspection"
+        },
+        classes: inputClass,
+        id: "inspection",
+        name: "inspection",
+        suffix: {
+          text: "mins"
+        },
+        spellcheck: false,
+          value: "",
+          attributes: {
+        maxlength: 3 
+    }
+      }) }}
+
+
+      {{ govukInput({
+        label: {
+          text: "Clean up"
+        },
+        classes: inputClass,
+        id: "cleanUp",
+        name: "cleanUp",
+        suffix: {
+          text: "mins"
+        },
+        spellcheck: false,
+          value: "",
+          attributes: {
+        maxlength: 3 
+    }
+      }) }}
+
+      </div>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+       <p><a class="govuk-link" href="inspectionLength">Cancel</a></p>
+
+    </form>
+{% endcall %}
+
+{% endblock %}

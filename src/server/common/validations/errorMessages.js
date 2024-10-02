@@ -17,7 +17,11 @@ const errorMessages = {
   timeFromRequired: 'Start time is required',
   timeToRequired: 'End time is required',
   timeInvalidFormat: "Invalid time format. Please use the format 'h:mm(am/pm)'",
-  timeOrderInvalid: 'Start time must be earlier than end time'
+  timeOrderInvalid: 'Start time must be earlier than end time',
+  inspectionLengthAnimalSelectionRequired:
+    'You must select at least one animal type',
+  inspectionLengthTimeRequired:
+    'All time fields are required and must be positive integers greater than zero.'
 }
 
 export { errorMessages }

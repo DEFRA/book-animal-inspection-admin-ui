@@ -92,7 +92,8 @@
             // Collect all checked checkbox values
             const selectedValues = Array.from(checkboxes)
                 .filter(checkbox => checkbox.checked)
-                .map(checkbox => checkbox.value);
+                .map(checkbox => checkbox.value)
+                .filter(value => value !== 'on'); 
 
             // Update the hidden input value with the comma-separated values
             hiddenField.value = selectedValues.join(',');

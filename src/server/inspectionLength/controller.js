@@ -62,6 +62,8 @@ const inspectionLengthController = {
 const updateInspectionLengthController = {
   handler(request, h) {
     let error = null
+    let inputClass = 'govuk-input--width-5'
+    let formGroupClass = 'govuk-form-group'
 
     if (request.method === 'post') {
       const {
@@ -96,6 +98,9 @@ const updateInspectionLengthController = {
 
         request.yar.set('totalInspectionLength', totalInspectionLength)
         return h.redirect('/confirmInspectionLength')
+      } else {
+        inputClass = 'govuk-input--width-5 govuk-input--error'
+        formGroupClass = 'govuk-form-group govuk-form-group--error'
       }
     }
 
@@ -105,7 +110,9 @@ const updateInspectionLengthController = {
       backUrl: 'inspectionLength',
       selectedItems: request.yar.get('selectedItems'),
       selectedAnimalTypes: request.yar.get('selectedAnimalTypes'),
-      error
+      error,
+      inputClass,
+      formGroupClass
     })
   }
 }

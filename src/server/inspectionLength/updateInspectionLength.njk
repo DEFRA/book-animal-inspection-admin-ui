@@ -29,11 +29,12 @@
           ]
         }) }}
         {%endif%} 
+    <div class="{{formGroupClass}}">
       {{ govukInput({
         label: {
           text: "Marshalling"
         },
-        classes: "govuk-input--width-5",
+        classes: inputClass,
         id: "marshalling",
         name: "marshalling",
         suffix: {
@@ -46,12 +47,11 @@
     }
       }) }}
 
-
       {{ govukInput({
         label: {
           text: "Set up"
         },
-        classes: "govuk-input--width-5",
+        classes: inputClass,
         id: "setup",
         name: "setup",
         suffix: {
@@ -69,7 +69,7 @@
         label: {
           text: "Inspection"
         },
-        classes: "govuk-input--width-5",
+        classes: inputClass,
         id: "inspection",
         name: "inspection",
         suffix: {
@@ -87,7 +87,7 @@
         label: {
           text: "Clean up"
         },
-        classes: "govuk-input--width-5",
+        classes: inputClass,
         id: "cleanUp",
         name: "cleanUp",
         suffix: {
@@ -99,6 +99,8 @@
         maxlength: 3 
     }
       }) }}
+
+      </div>
 
       <button type="submit" class="govuk-button" data-module="govuk-button">
         Save and continue

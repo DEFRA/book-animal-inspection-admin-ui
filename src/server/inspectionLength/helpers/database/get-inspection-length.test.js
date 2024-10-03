@@ -1,53 +1,63 @@
-// @ts-nocheck
-import { getShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/get-shed-opening-timing.js'
+// Import the function and dependencies
+import { getInspectionLength } from '~/src/server/inspectionLength/helpers/database/get-inspection-length.js'
 import { fetcher } from '~/src/server/common/helpers/fetch/fetcher.js'
 import { config } from '~/src/config/index.js'
 
+// Mock the dependencies
 jest.mock('~/src/server/common/helpers/fetch/fetcher.js')
-jest.mock('~/src/server/common/helpers/logging/logger.js', () => ({
-  createLogger: jest.fn(() => ({
-    info: jest.fn(),
-    error: jest.fn()
-  }))
-}))
-jest.mock('~/src/config/index.js', () => ({
-  config: {
-    get: jest.fn()
-  }
-}))
+jest.mock('~/src/config/index.js')
 
-describe('getShedOpeningTiming', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
+describe('getInspectionLength', () => {
+  const mockApiUrl = 'http://mock-api-url.com'
+
+  beforeAll(() => {
+    // Mock the config to return a specific API URL
+    // @ts-ignore
+    config.get.mockReturnValue(mockApiUrl)
   })
 
-  it('should fetch and return shed opening timing for a given siteId', async () => {
-    const siteId = '123'
-    const expectedTiming = '08:00 AM - 05:00 PM'
+  afterEach(() => {
+    jest.clearAllMocks() // Clear mocks after each test to avoid interference
+  })
 
-    config.get.mockReturnValue('http://mockapi.com')
-    fetcher.mockResolvedValue({
-      json: {
-        shedOpeningTiming: expectedTiming
-      }
-    })
+  it('should fetch inspection length data successfully', async () => {
+    const siteId = 1
+    const mockResponse = { json: { result: [{ _id: '1', AnimalType: 'Dog' }] } }
 
-    const result = await getShedOpeningTiming(siteId)
+    // Mock fetcher to return a successful response
+    // @ts-ignore
+    fetcher.mockResolvedValue(mockResponse)
+
+    const result = await getInspectionLength(siteId)
 
     expect(fetcher).toHaveBeenCalledWith(
-      `http://mockapi.com/shedOpeningTimingBySiteId/${siteId}`
+      `${mockApiUrl}/getInspectionLengthBySiteId/${siteId}`
     )
-    expect(result).toBe(expectedTiming)
+    expect(result).toEqual(mockResponse.json.result)
   })
 
-  it('should throw an error if fetching shed opening timing fails', async () => {
-    const siteId = '123'
+  it('should throw an error when fetching data fails', async () => {
+    const siteId = 2
 
-    config.get.mockReturnValue('http://mockapi.com')
+    // Mock fetcher to return no result
+    // @ts-ignore
     fetcher.mockResolvedValue(null)
 
-    await expect(getShedOpeningTiming(siteId)).rejects.toThrow(
-      'Failed to fetch shed opening timing'
+    await expect(getInspectionLength(siteId)).rejects.toThrow(
+      'Failed to fetch inspection length data'
+    )
+  })
+
+  it('should throw an error when fetcher throws an error', async () => {
+    const siteId = 3
+    const errorMessage = 'Failed to fetch inspection length data'
+
+    // Mock fetcher to throw an error
+    // @ts-ignore
+    fetcher.mockRejectedValue(new Error(errorMessage))
+
+    await expect(getInspectionLength(siteId)).rejects.toThrow(
+      'Failed to fetch inspection length data'
     )
   })
 })

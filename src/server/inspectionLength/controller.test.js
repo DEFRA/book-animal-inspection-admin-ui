@@ -1,226 +1,215 @@
 // @ts-nocheck
-
+// Import necessary dependencies and the controllers
+// @ts-ignore
 import {
-  shedOpeningTimingController,
-  updateShedOpeningTimingController,
-  confirmShedOpeningTimingController
-} from '~/src/server/shedOpeningTiming/controller.js'
-import { getShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/get-shed-opening-timing.js'
-import { updateShedOpeningTiming } from '~/src/server/shedOpeningTiming/helpers/database/update-shed-opening-timing.js'
+  inspectionLengthController,
+  updateInspectionLengthController,
+  confirmInspectionLengthController
+} from '~/src/server/inspectionLength/controller.js'
+import { getInspectionLength } from '~/src/server/inspectionLength/helpers/database/get-inspection-length.js'
+import { updateInspectionLength } from '~/src/server/inspectionLength/helpers/database/update-inspection-length.js'
 import { validators } from '~/src/server/common/validations/validations.js'
 
-// Mocking external dependencies
+// Mock dependencies
 jest.mock(
-  '~/src/server/shedOpeningTiming/helpers/database/get-shed-opening-timing.js'
+  '~/src/server/inspectionLength/helpers/database/get-inspection-length.js'
 )
 jest.mock(
-  '~/src/server/shedOpeningTiming/helpers/database/update-shed-opening-timing.js'
+  '~/src/server/inspectionLength/helpers/database/update-inspection-length.js'
 )
 jest.mock('~/src/server/common/validations/validations.js')
 
-describe('shedOpeningTimingController', () => {
-  let h
+describe('Inspection Length Controllers', () => {
+  let h, request
 
   beforeEach(() => {
+    // Initialize h and request objects before each test
     h = {
-      view: jest.fn().mockReturnValue('rendered view')
+      redirect: jest.fn(),
+      view: jest.fn()
+    }
+    request = {
+      method: 'get',
+      payload: {},
+      yar: {
+        set: jest.fn(),
+        get: jest.fn().mockReturnValue(null)
+      }
     }
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
-  it('should render the correct view with formatted data', async () => {
-    getShedOpeningTiming.mockResolvedValue([
-      {
-        ShedId: 1,
-        ShedName: 'Shed 1',
-        Day: 'Monday',
-        From: '08:00',
-        To: '17:00',
-        _id: '1'
-      },
-      {
-        ShedId: 1,
-        ShedName: 'Shed 1',
-        Day: 'Tuesday',
-        From: '08:00',
-        To: '17:00',
-        _id: '2'
-      }
-    ])
-
-    const request = {} // Mock request object
-
-    const result = await shedOpeningTimingController.handler(request, h)
-
-    expect(h.view).toHaveBeenCalledWith('shedOpeningTiming/index', {
-      pageTitle: 'Shed Opening Timing',
-      heading: 'SehdOpeningTiming',
-      shedOpeningTimingData: [
+  describe('inspectionLengthController', () => {
+    beforeEach(() => {
+      // Mock the return value of getInspectionLength
+      // @ts-ignore
+      getInspectionLength.mockResolvedValue([
         {
-          shedName: 'Shed 1',
-          shedOpeningRows: [
-            [
-              { text: 'Monday' },
-              { text: '08:00 to 17:00' },
-              {
-                html: '<a href="updateShedOpeningTiming?Id=1&From=08:00&To=17:00&Day=Monday&Shedname=Shed 1">Change</a>'
-              }
-            ],
-            [
-              { text: 'Tuesday' },
-              { text: '08:00 to 17:00' },
-              {
-                html: '<a href="updateShedOpeningTiming?Id=2&From=08:00&To=17:00&Day=Tuesday&Shedname=Shed 1">Change</a>'
-              }
-            ]
-          ]
+          _id: '1',
+          ShedId: 'shed1',
+          ShedName: 'Shed 1',
+          AnimalType: 'Dog',
+          Marshalling: 5,
+          Unloading: 10,
+          Inspection: 15,
+          LoadingAndCleanUp: 5,
+          TotalInspectionLength: 35
+        },
+        {
+          _id: '2',
+          ShedId: 'shed2',
+          ShedName: 'Shed 2',
+          AnimalType: 'Cat',
+          Marshalling: 6,
+          Unloading: 9,
+          Inspection: 14,
+          LoadingAndCleanUp: 4,
+          TotalInspectionLength: 33
         }
-      ],
-      backUrl: 'siteOperations'
+      ])
     })
 
-    expect(result).toBe('rendered view')
-  })
-})
-
-describe('updateShedOpeningTimingController', () => {
-  let h
-
-  beforeEach(() => {
-    h = {
-      view: jest.fn().mockReturnValue('rendered view'),
-      redirect: jest.fn()
-    }
-  })
-
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
-  it('should render the update view with correct data (GET request)', () => {
-    const request = {
-      method: 'get',
-      query: {
-        Id: '1',
-        From: '08:00',
-        To: '17:00',
-        Day: 'Monday',
-        Shedname: 'Shed 1'
-      }
-    }
-
-    const result = updateShedOpeningTimingController.handler(request, h)
-
-    expect(h.view).toHaveBeenCalledWith(
-      'shedOpeningTiming/updateShedOpeningTiming',
-      {
-        pageTitle: 'Shed Opening Timing',
-        heading: 'shedOpeningTiming',
-        id: '1',
-        from: '08:00',
-        to: '17:00',
-        day: 'Monday',
-        shedName: 'Shed 1',
-        backUrl: 'shedOpeningTiming',
+    it('should render the inspection length view with data', async () => {
+      // @ts-ignore
+      await inspectionLengthController.handler(request, h)
+      expect(getInspectionLength).toHaveBeenCalledWith(1)
+      expect(h.view).toHaveBeenCalledWith('inspectionLength/index', {
+        pageTitle: 'Inspection Length',
+        heading: 'InspectionLength',
+        inspectionLengthData: expect.any(Array),
+        backUrl: 'siteOperations',
         error: null
-      }
-    )
+      })
+    })
 
-    expect(result).toBe('rendered view')
+    it('should handle post request with valid selected items', async () => {
+      request.method = 'post'
+      request.payload = { selectedItems: '1,2' }
+      // @ts-ignore
+      validators.validateAnimalSelection.mockReturnValue(null) // Simulate no validation error
+
+      // @ts-ignore
+      await inspectionLengthController.handler(request, h)
+
+      expect(validators.validateAnimalSelection).toHaveBeenCalledWith('1,2')
+      expect(h.redirect).toHaveBeenCalledWith('/updateInspectionLength')
+      expect(request.yar.set).toHaveBeenCalledWith(
+        'selectedAnimalTypes',
+        'Dog, Cat'
+      )
+      expect(request.yar.set).toHaveBeenCalledWith('selectedItems', '1,2')
+    })
+
+    it('should return an error when validation fails', async () => {
+      request.method = 'post'
+      request.payload = { selectedItems: '1,2' }
+
+      validators.validateAnimalSelection.mockReturnValue('Validation Error') // Simulate a validation error
+
+      await inspectionLengthController.handler(request, h)
+
+      expect(h.view).toHaveBeenCalledWith(
+        'inspectionLength/index',
+        expect.objectContaining({
+          error: 'Validation Error'
+        })
+      )
+    })
   })
 
-  it('should validate and redirect on valid POST request', () => {
-    const request = {
-      method: 'post',
-      payload: {
-        From: '08:00',
-        To: '17:00',
-        Id: '1',
-        Day: 'Monday',
-        Shedname: 'Shed 1'
+  describe('updateInspectionLengthController', () => {
+    it('should handle post request and redirect on valid input', async () => {
+      request.method = 'post'
+      request.payload = {
+        marshalling: '5',
+        setup: '10',
+        inspection: '15',
+        cleanUp: '5',
+        selectedItems: '1,2',
+        selectedAnimalTypes: 'Dog, Cat'
       }
-    }
 
-    validators.validateTime.mockReturnValue(null)
+      validators.validateInspectionLength.mockReturnValue(null) // No validation error
 
-    const result = updateShedOpeningTimingController.handler(request, h)
+      await updateInspectionLengthController.handler(request, h)
 
-    expect(validators.validateTime).toHaveBeenCalledWith('08:00', '17:00')
-    expect(h.redirect).toHaveBeenCalledWith(
-      '/confirmShedOpeningTiming?Id=1&From=08:00&To=17:00&Day=Monday&Shedname=Shed 1'
-    )
-    expect(result).toBeUndefined()
+      expect(validators.validateInspectionLength).toHaveBeenCalledWith(
+        '5',
+        '10',
+        '15',
+        '5'
+      )
+      expect(request.yar.set).toHaveBeenCalledWith('marshalling', '5')
+      expect(request.yar.set).toHaveBeenCalledWith('setup', '10')
+      expect(h.redirect).toHaveBeenCalledWith('/confirmInspectionLength')
+    })
+
+    it('should handle errors and return the view with errors', async () => {
+      request.method = 'post'
+      request.payload = {
+        marshalling: 'invalid',
+        setup: '10',
+        inspection: '15',
+        cleanUp: '5'
+      }
+
+      validators.validateInspectionLength.mockReturnValue('Validation Error') // Simulate validation error
+
+      await updateInspectionLengthController.handler(request, h)
+
+      expect(h.view).toHaveBeenCalledWith(
+        'inspectionLength/updateInspectionLength',
+        expect.objectContaining({
+          error: 'Validation Error',
+          inputClass: 'govuk-input--width-5 govuk-input--error',
+          formGroupClass: 'govuk-form-group govuk-form-group--error'
+        })
+      )
+    })
   })
 
-  it('should render the update view with validation error on invalid POST request', () => {
-    const request = {
-      method: 'post',
-      payload: {
-        From: '17:00',
-        To: '08:00',
-        Id: '1',
-        Day: 'Monday',
-        Shedname: 'Shed 1'
+  describe('confirmInspectionLengthController', () => {
+    it('should handle post request and redirect on successful update', async () => {
+      request.method = 'post'
+      request.payload = {
+        marshalling: '5',
+        setup: '10',
+        inspection: '15',
+        cleanUp: '5',
+        selectedItems: '1,2'
       }
-    }
+      request.yar.get
+        .mockReturnValueOnce('5')
+        .mockReturnValueOnce('10')
+        .mockReturnValueOnce('15')
+        .mockReturnValueOnce('5') // Mock return values for yar.get
 
-    validators.validateTime.mockReturnValue('Invalid time range')
+      updateInspectionLength.mockResolvedValue({ response: { ok: true } }) // Simulate successful update
 
-    const result = updateShedOpeningTimingController.handler(request, h)
+      await confirmInspectionLengthController.handler(request, h)
 
-    expect(validators.validateTime).toHaveBeenCalledWith('17:00', '08:00')
-    expect(h.view).toHaveBeenCalledWith(
-      'shedOpeningTiming/updateShedOpeningTiming',
-      {
-        pageTitle: 'Shed Opening Timing',
-        heading: 'shedOpeningTiming',
-        id: '1',
-        from: '17:00',
-        to: '08:00',
-        day: 'Monday',
-        shedName: 'Shed 1',
-        backUrl: 'shedOpeningTiming',
-        error: 'Invalid time range'
+      expect(h.redirect).toHaveBeenCalledWith('inspectionLength')
+    })
+
+    it('should return an error when update fails', async () => {
+      request.method = 'post'
+      request.payload = {
+        marshalling: '5',
+        setup: '10',
+        inspection: '15',
+        cleanUp: '5',
+        selectedItems: '1,2'
       }
-    )
 
-    expect(result).toBe('rendered view')
-  })
-})
+      updateInspectionLength.mockResolvedValue({ response: { ok: false } }) // Simulate failed update
 
-describe('confirmShedOpeningTimingController', () => {
-  let h
+      await confirmInspectionLengthController.handler(request, h)
 
-  beforeEach(() => {
-    h = {
-      view: jest.fn().mockReturnValue('rendered view'),
-      redirect: jest.fn()
-    }
-  })
-
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
-  it('should update shed opening timing and redirect on valid POST request', async () => {
-    const request = {
-      method: 'post',
-      payload: {
-        Id: '1',
-        From: '08:00',
-        To: '17:00'
-      }
-    }
-
-    updateShedOpeningTiming.mockResolvedValue({ response: { ok: true } })
-
-    const result = await confirmShedOpeningTimingController.handler(request, h)
-
-    expect(updateShedOpeningTiming).toHaveBeenCalledWith('1', '08:00', '17:00')
-    expect(h.redirect).toHaveBeenCalledWith('shedOpeningTiming')
-    expect(result).toBeUndefined()
+      expect(h.view).toHaveBeenCalledWith(
+        'inspectionLength/confirmInspectionLength',
+        expect.objectContaining({
+          error: 'Failed to update the records.'
+        })
+      )
+    })
   })
 })
